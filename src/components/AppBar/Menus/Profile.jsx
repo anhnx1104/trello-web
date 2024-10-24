@@ -1,5 +1,4 @@
 import * as React from "react";
-import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import Box from "@mui/material/Box";
 
@@ -34,7 +33,13 @@ const Profile = () => {
           aria-haspopup="true"
           aria-expanded={open ? "true" : undefined}
         >
-          <Avatar src="./src/assets/avata.jpg" sx={{ width: 32, height: 32 }} />
+          <Avatar
+            sx={{
+              width: 34,
+              height: 34,
+            }}
+            src="./src/assets/avata.jpg"
+          />
         </IconButton>
       </Tooltip>
       <Menu
