@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import Box from "@mui/material/Box";
-import theme from "../../../theme";
+import theme from "~/theme";
 
 const BoardBar = () => {
   return (
@@ -14,7 +14,7 @@ const BoardBar = () => {
         alignItems: "center",
       }}
     >
-      Boảd Bả
+      Board Bar
     </Box>
   );
 };

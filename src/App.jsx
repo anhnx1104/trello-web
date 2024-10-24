@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import BoardDetails from "./pages/Boards/_id";
+import BoardDetails from "~/pages/Boards/_id";
 
 function App() {
   return <BoardDetails />;
