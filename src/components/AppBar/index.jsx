@@ -15,6 +15,7 @@ import Badge from "@mui/material/Badge";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import Tooltip from "@mui/material/Tooltip";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import AddIcon from "@mui/icons-material/Add";
 
 function AppBar() {
   return (
@@ -27,6 +28,7 @@ function AppBar() {
         alignItems: "center",
         justifyContent: "space-between",
         gap: 2,
+        overflowX: "auto",
       }}
     >
       <Box
@@ -47,6 +49,7 @@ function AppBar() {
           <SvgIcon
             component={TrelloLogo}
             inheritViewBox
+            fontSize="small"
             sx={{
               color: "primary.main",
             }}
@@ -64,12 +67,23 @@ function AppBar() {
           </Typography>
         </Box>
 
-        <Workpaces />
-        <Recent />
-        <Starred />
-        <Templates />
-
-        <Button variant="outlined">Create Board</Button>
+        <Box
+          sx={{
+            display: {
+              xs: "none",
+              md: "flex",
+              gap: 1,
+            },
+          }}
+        >
+          <Workpaces />
+          <Recent />
+          <Starred />
+          <Templates />
+          <Button startIcon={<AddIcon />} variant="outlined">
+            Create Board
+          </Button>
+        </Box>
       </Box>
 
       <Box
@@ -95,7 +109,11 @@ function AppBar() {
               cursor: "pointer",
             }}
           >
-            <NotificationsNoneIcon />
+            <NotificationsNoneIcon
+              sx={{
+                color: "primary.main",
+              }}
+            />
           </Badge>
         </Tooltip>
 
@@ -107,7 +125,11 @@ function AppBar() {
               cursor: "pointer",
             }}
           >
-            <HelpOutlineIcon />
+            <HelpOutlineIcon
+              sx={{
+                color: "primary.main",
+              }}
+            />
           </Badge>
         </Tooltip>
         <Profile />
