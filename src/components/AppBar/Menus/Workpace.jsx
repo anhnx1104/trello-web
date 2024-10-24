@@ -25,6 +25,9 @@ const Workpaces = () => {
   return (
     <Box>
       <Button
+        sx={{
+          color: "white",
+        }}
         id="basic-button-workpaces"
         aria-controls={open ? "basic-menu-workpaces" : undefined}
         aria-haspopup="true"

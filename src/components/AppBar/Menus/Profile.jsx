@@ -35,8 +35,8 @@ const Profile = () => {
         >
           <Avatar
             sx={{
-              width: 34,
-              height: 34,
+              width: 36,
+              height: 36,
             }}
             src="./src/assets/avata.jpg"
           />
