@@ -17,8 +17,11 @@ import CloudCircleIcon from "@mui/icons-material/CloudCircle";
 import AddCardIcon from "@mui/icons-material/AddCard";
 import DragHandleIcon from "@mui/icons-material/DragHandle";
 import ListCards from "./ListCards/ListCards";
+import { mapOrder } from "~/utils/sorts";
 
-const Column = () => {
+const Column = (props) => {
+  const { column } = props;
+
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -27,6 +30,7 @@ const Column = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const orderedCards = mapOrder(column?.cards, column.cardOrderIds, "_id");
 
   return (
     <Box
@@ -63,7 +67,7 @@ const Column = () => {
             fontSize: "1rem",
           }}
         >
-          Column Title 1
+          {column?.title}
         </Typography>
         <Box>
           <Tooltip title="More Option">
@@ -128,9 +132,9 @@ const Column = () => {
         </Box>
       </Box>
 
-      {/* CONTENT CARD */}
+      {/* List CARD */}
 
-      <ListCards />
+      <ListCards cards={orderedCards} />
 
       {/* FOOTER */}
 
