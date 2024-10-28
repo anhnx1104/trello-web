@@ -7,9 +7,28 @@ import CardMedia from "@mui/material/CardMedia";
 import CommentIcon from "@mui/icons-material/Comment";
 import GroupIcon from "@mui/icons-material/Group";
 import AttachmentIcon from "@mui/icons-material/Attachment";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 const Cards = (props) => {
   const { card } = props;
+
+  // handle Drop Drag (DND)
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: card._id, data: { ...card } });
+  //  fix lỗi animation vỡ UI  Tranform => Translate: streat https://github.com/clauderic/dnd-kit/issues/117
+  const dndKitStyleCard = {
+    // touchAction: "none",
+    transform: CSS.Translate.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : undefined,
+  };
 
   const shouldShowCardActions = () => {
     return (
@@ -20,6 +39,10 @@ const Cards = (props) => {
   };
   return (
     <MuiCard
+      ref={setNodeRef}
+      style={dndKitStyleCard}
+      {...attributes}
+      {...listeners}
       sx={{
         cursor: "pointer",
         boxShadow: "0 1px 1px rgba(0,0,0,0.2)",
