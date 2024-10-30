@@ -9,6 +9,7 @@ import {
 import { useState } from "react";
 import TextField from "@mui/material/TextField";
 import CloseIcon from "@mui/icons-material/Close";
+import { toast } from "react-toastify";
 
 const ListColumns = (props) => {
   const { columns } = props;
@@ -19,7 +20,10 @@ const ListColumns = (props) => {
 
   const addNewColumn = () => {
     // Add new column logic here
-    if (!valueColumn) return;
+    if (!valueColumn) {
+      toast.error("Please enter column title");
+      return;
+    }
 
     toggleColumnNewColumnForm();
     setValueColumn("");
