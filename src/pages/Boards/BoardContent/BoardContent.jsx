@@ -61,7 +61,7 @@ const BoardContent = (props) => {
   const lastOverId = useRef(null);
 
   useEffect(() => {
-    setOrderedColumns(mapOrder(board?.columns, board.columnOrderIds, "_id"));
+    setOrderedColumns(mapOrder(board?.columns, board?.columnOrderIds, "_id"));
   }, [board]);
 
   const findColumnByCard = (cardId) => {
