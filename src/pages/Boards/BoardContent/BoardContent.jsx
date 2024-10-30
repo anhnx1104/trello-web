@@ -5,8 +5,8 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import {
   DndContext,
   // PointerSensor,
-  MouseSensor,
-  TouchSensor,
+  // MouseSensor,
+  // TouchSensor,
   useSensor,
   useSensors,
   DragOverlay,
@@ -17,6 +17,7 @@ import {
   // rectIntersection,
   getFirstCollision,
 } from "@dnd-kit/core";
+import { MouseSensor, TouchSensor } from "~/customLibraries/DndKitCustom";
 import { arrayMove } from "@dnd-kit/sortable";
 import Column from "./ListColumns/Column/Column";
 import Cards from "./ListColumns/Column/ListCards/Card/Card";

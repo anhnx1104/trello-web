@@ -22,6 +22,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import TextField from "@mui/material/TextField";
 import CloseIcon from "@mui/icons-material/Close";
+import { toast } from "react-toastify";
 
 const Column = (props) => {
   const { column } = props;
@@ -62,8 +63,18 @@ const Column = (props) => {
 
   const addNewCard = () => {
     // Add new Card logic here
-    if (!valueCard) return;
-
+    if (!valueCard) {
+      toast.error("Please enter Card title", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        progress: undefined,
+      });
+      return;
+    }
     toggleCardNewCardForm();
     setValueCard("");
   };
@@ -221,6 +232,7 @@ const Column = (props) => {
                 size="small"
                 variant="outlined"
                 autoFocus
+                data-no-dnd="true"
                 value={valueCard}
                 onChange={(e) => setValueCard(e.target.value)}
                 sx={{
@@ -261,6 +273,7 @@ const Column = (props) => {
                   variant="contained"
                   color="success"
                   size="small"
+                  data-no-dnd="true"
                   sx={{
                     boxShadow: "none",
                     border: "0.5px solid",
@@ -274,6 +287,7 @@ const Column = (props) => {
                 </Button>
                 <CloseIcon
                   fontSize="small"
+                  data-no-dnd="true"
                   sx={{
                     color: (theme) => theme.palette.warning.light,
                     cursor: "pointer",
