@@ -25,7 +25,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "react-toastify";
 
 const Column = (props) => {
-  const { column } = props;
+  const { column, createNewCard } = props;
 
   // handle Drop Drag (DND)
   const {
@@ -61,20 +61,20 @@ const Column = (props) => {
   const toggleCardNewCardForm = () => setOpenNewCardForm(!openNewCardForm);
   const [valueCard, setValueCard] = useState("");
 
-  const addNewCard = () => {
+  const addNewCard = async () => {
     // Add new Card logic here
     if (!valueCard) {
       toast.error("Please enter Card title", {
         position: "bottom-right",
         autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: false,
-        progress: undefined,
       });
       return;
     }
+    const newCardData = {
+      title: valueCard,
+      columnId: column._id,
+    };
+    await createNewCard(newCardData);
     toggleCardNewCardForm();
     setValueCard("");
   };
