@@ -30,7 +30,7 @@ const ACTIVE_DRAG_ITEM_TYPE = {
 };
 
 const BoardContent = (props) => {
-  const { board } = props;
+  const { board, createNewColumn, createNewCard } = props;
 
   // const poiterSensors = useSensor(PointerSensor, {
   //   activationConstraint: { distance: 10 },
@@ -386,7 +386,11 @@ const BoardContent = (props) => {
           p: "10px 0",
         }}
       >
-        <ListColumns columns={orderedColumns} />
+        <ListColumns
+          createNewCard={createNewCard}
+          createNewColumn={createNewColumn}
+          columns={orderedColumns}
+        />
         {/* Hiển thị khi đang di chuyển */}
         <DragOverlay dropAnimation={dropAnimationCustom}>
           {!activeDragItemType && null}
