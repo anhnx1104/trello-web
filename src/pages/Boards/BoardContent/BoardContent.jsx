@@ -16,6 +16,7 @@ import {
   pointerWithin,
   // rectIntersection,
   getFirstCollision,
+  rectIntersection,
 } from "@dnd-kit/core";
 import { MouseSensor, TouchSensor } from "~/customLibraries/DndKitCustom";
 import { arrayMove } from "@dnd-kit/sortable";
@@ -30,7 +31,7 @@ const ACTIVE_DRAG_ITEM_TYPE = {
 };
 
 const BoardContent = (props) => {
-  const { board, createNewColumn, createNewCard } = props;
+  const { board, createNewColumn, createNewCard, moveColumns } = props;
 
   // const poiterSensors = useSensor(PointerSensor, {
   //   activationConstraint: { distance: 10 },
@@ -116,7 +117,6 @@ const BoardContent = (props) => {
         );
         // thêm placerholer card khi cloumn bị rỗng
         if (isEmpty(nextActiveColumn.cards)) {
-          console.log("card cuối");
           nextActiveColumn.cards = [generatePlaceholderCard(nextActiveColumn)];
         }
         // Cập nhật lại mảng vào cho chuẩn dữ liệu
@@ -181,20 +181,20 @@ const BoardContent = (props) => {
     const { active, over } = event;
 
     if (!over || !active) return;
-
     const {
       id: activeDraggingCardId,
       data: { current: activeDraggingCardData },
     } = active;
-
+    // console.log("activeDraggingCardData", activeDraggingCardData);
+    console.log(active?.id);
     // overCard là card đang bấm vào tương tác
     const { id: overCardId } = over;
 
     const activeColumn = findColumnByCard(activeDraggingCardId);
     const overColumn = findColumnByCard(overCardId);
 
-    // console.log("activeColumn", activeColumn);
-    // console.log("overColumn", overColumn);
+    console.log("activeColumn", activeColumn);
+    console.log("overColumn", overColumn);
 
     if (!activeColumn || !overColumn) return;
     if (activeColumn._id !== overColumn._id) {
@@ -215,9 +215,6 @@ const BoardContent = (props) => {
   const handleDragEnd = (event) => {
     const { active, over } = event;
     if (!over) return;
-
-    // console.log("Drag ended: ", event);
-    // Xử lý khi kéo card
     if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.CARD) {
       const {
         id: activeDraggingCardId,
@@ -281,6 +278,7 @@ const BoardContent = (props) => {
 
     // Xử lý khi kéo column
     if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) {
+      console.log("kéo column");
       if (active.id !== over.id) {
         // lấy vị trí cũ từ active
         const oldColumnIndex = orderedColumns.findIndex(
@@ -298,7 +296,7 @@ const BoardContent = (props) => {
           oldColumnIndex,
           newColumnIndex
         );
-
+        moveColumns(dndOrderedColumns);
         // const dndOrderedColumnsIds = dndOrderedColumns.map((c) => c._id);
         setOrderedColumns(dndOrderedColumns);
       }
@@ -367,6 +365,20 @@ const BoardContent = (props) => {
     },
     [activeDragItemData, orderedColumns]
   );
+
+  //  Document  : https://docs.dndkit.com/api-documentation/context-provider/collision-detection-algorithms
+  function customCollisionDetectionAlgorithm(args) {
+    // First, let's see if there are any collisions with the pointer
+    const pointerCollisions = pointerWithin(args);
+
+    // Collision detection algorithms return an array of collisions
+    if (pointerCollisions.length > 0) {
+      return pointerCollisions;
+    }
+
+    // If there are no collisions with the pointer, return rectangle intersections
+    return rectIntersection(args);
+  }
 
   return (
     <DndContext

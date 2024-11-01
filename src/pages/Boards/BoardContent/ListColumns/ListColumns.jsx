@@ -32,6 +32,7 @@ const ListColumns = (props) => {
     toggleColumnNewColumnForm();
     setValueColumn("");
   };
+  console.log("orderedColumns", columns);
   return (
     /**  Value truyền vào items yêu cầu là 1 mảng  dạng ["1", "2", "3"], not [{id: "1"}, {id: "2}, {id: "3}]
      *  Vấn đề khi không chuyển động animations : https://github.com/clauderic/dnd-kit/issues/183#issuecomment-812569512
