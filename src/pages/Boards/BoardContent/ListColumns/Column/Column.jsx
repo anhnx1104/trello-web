@@ -55,7 +55,7 @@ const Column = (props) => {
     setAnchorEl(null);
   };
   // Sort column
-  const orderedCards = mapOrder(column?.cards, column.cardOrderIds, "_id");
+  const orderedCards = column?.cards;
 
   const [openNewCardForm, setOpenNewCardForm] = useState(false);
   const toggleCardNewCardForm = () => setOpenNewCardForm(!openNewCardForm);

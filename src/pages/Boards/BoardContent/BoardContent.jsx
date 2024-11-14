@@ -31,7 +31,14 @@ const ACTIVE_DRAG_ITEM_TYPE = {
 };
 
 const BoardContent = (props) => {
-  const { board, createNewColumn, createNewCard, moveColumns } = props;
+  const {
+    board,
+    createNewColumn,
+    createNewCard,
+    moveColumns,
+    moveCardInTheSameColumn,
+    moveCardToDifferrentColums,
+  } = props;
 
   // const poiterSensors = useSensor(PointerSensor, {
   //   activationConstraint: { distance: 10 },
@@ -63,7 +70,7 @@ const BoardContent = (props) => {
   const lastOverId = useRef(null);
 
   useEffect(() => {
-    setOrderedColumns(mapOrder(board?.columns, board?.columnOrderIds, "_id"));
+    setOrderedColumns(board.columns);
   }, [board]);
 
   const findColumnByCard = (cardId) => {
@@ -80,7 +87,8 @@ const BoardContent = (props) => {
     over,
     activeColumn,
     activeDraggingCardId,
-    activeDraggingCardData
+    activeDraggingCardData,
+    triggerFrom
   ) => {
     setOrderedColumns((prevColumns) => {
       //  Tìm vị trí mà cái card đang active sắp được thả
@@ -153,6 +161,14 @@ const BoardContent = (props) => {
           (card) => card._id
         );
       }
+      if (triggerFrom === "handleDragEnd") {
+        moveCardToDifferrentColums(
+          activeDraggingCardId,
+          oldColumnWhenDraggingCard._id,
+          nextOverColumn._id,
+          nextColumns
+        );
+      }
       return nextColumns;
     });
   };
@@ -186,15 +202,11 @@ const BoardContent = (props) => {
       data: { current: activeDraggingCardData },
     } = active;
     // console.log("activeDraggingCardData", activeDraggingCardData);
-    console.log(active?.id);
     // overCard là card đang bấm vào tương tác
     const { id: overCardId } = over;
 
     const activeColumn = findColumnByCard(activeDraggingCardId);
     const overColumn = findColumnByCard(overCardId);
-
-    console.log("activeColumn", activeColumn);
-    console.log("overColumn", overColumn);
 
     if (!activeColumn || !overColumn) return;
     if (activeColumn._id !== overColumn._id) {
@@ -206,7 +218,8 @@ const BoardContent = (props) => {
         over,
         activeColumn,
         activeDraggingCardId,
-        activeDraggingCardData
+        activeDraggingCardData,
+        "handleDragOver"
       );
     }
   };
@@ -215,6 +228,8 @@ const BoardContent = (props) => {
   const handleDragEnd = (event) => {
     const { active, over } = event;
     if (!over) return;
+    // console.log("Hành động kéo thả card 2   column khác nhau");
+
     if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.CARD) {
       const {
         id: activeDraggingCardId,
@@ -238,7 +253,8 @@ const BoardContent = (props) => {
           over,
           activeColumn,
           activeDraggingCardId,
-          activeDraggingCardData
+          activeDraggingCardData,
+          "handleDragEnd"
         );
       } else {
         // console.log("Hành động kéo thả card cùng 1 column");
@@ -260,6 +276,7 @@ const BoardContent = (props) => {
           oldCardIndex,
           newCardIndex
         );
+        const dndOderCardIds = dndOrderedCards.map((card) => card._id);
         setOrderedColumns((prevColumns) => {
           const nextColumns = cloneDeep(prevColumns);
 
@@ -269,16 +286,20 @@ const BoardContent = (props) => {
           );
 
           targetColumn.cards = dndOrderedCards;
-          targetColumn.cardOrderIds = dndOrderedCards.map((card) => card._id);
+          targetColumn.cardOrderIds = dndOderCardIds;
 
           return nextColumns;
         });
+        moveCardInTheSameColumn(
+          dndOrderedCards,
+          dndOderCardIds,
+          oldColumnWhenDraggingCard._id
+        );
       }
     }
 
     // Xử lý khi kéo column
     if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) {
-      console.log("kéo column");
       if (active.id !== over.id) {
         // lấy vị trí cũ từ active
         const oldColumnIndex = orderedColumns.findIndex(
@@ -296,9 +317,11 @@ const BoardContent = (props) => {
           oldColumnIndex,
           newColumnIndex
         );
+
+        setOrderedColumns(dndOrderedColumns);
+
         moveColumns(dndOrderedColumns);
         // const dndOrderedColumnsIds = dndOrderedColumns.map((c) => c._id);
-        setOrderedColumns(dndOrderedColumns);
       }
     }
 
@@ -383,7 +406,7 @@ const BoardContent = (props) => {
   return (
     <DndContext
       sensors={userMoveSensor}
-      collisionDetection={collisionDetectionStrategy}
+      collisionDetection={customCollisionDetectionAlgorithm}
       // collisionDetection={ }
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
